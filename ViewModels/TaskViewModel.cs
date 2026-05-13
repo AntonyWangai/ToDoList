@@ -1,5 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using TaskApp.Helpers;
@@ -13,10 +16,28 @@ namespace TaskApp.ViewModels
         public TaskViewModel()
         {
             AddTaskCommand = new RelayCommand(AddTask, CanAddTaskRun);
+            DeleteTaskCommand = new RelayCommand(DeleteTask, CanDeleteTaskRun); 
+            System.Diagnostics.Debug.WriteLine("ViewModel created");
 
         }
 
-       public ICommand AddTaskCommand { get; }
+        private bool CanDeleteTaskRun(object? arg)
+        {
+            return true;
+        }
+
+        private void DeleteTask(object? parameter)
+        {
+           if(parameter is TaskItem task)
+            {
+                TaskList.Remove(task);
+            }
+           Debug.WriteLine("DeleteTask executed");
+        }
+
+        public ICommand AddTaskCommand { get; }
+
+       public ICommand DeleteTaskCommand { get; }
 
         public ObservableCollection<TaskItem> TaskList { get; } = new();
         
@@ -34,8 +55,7 @@ namespace TaskApp.ViewModels
 
         public void AddTask(object? parameter)
         {
-            
-            string test = NewTask?.Title ?? string.Empty;
+       
             if (string.IsNullOrEmpty(NewTask?.Title))
             {
                 return;
@@ -44,6 +64,7 @@ namespace TaskApp.ViewModels
             TaskList.Insert(0, new TaskItem { Title = NewTask.Title, IsCompleted = NewTask.IsCompleted });
 
             NewTask = new TaskItem();
+            Debug.WriteLine("This is a test");
 
             OnPropertyChanged(nameof(NewTask));
 

@@ -24,6 +24,8 @@ namespace TaskApp.Models
         public string Title { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+        public DateTime DateAdded { get; set; } = DateTime.Now;
+
     }
 
 }
